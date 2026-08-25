@@ -1,0 +1,41 @@
+<?php return array(
+    'root' => array(
+        'name' => 'maneshtimilsina/majestic-before-after-image',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => '1ab57ea421643eff1cd776be18685b429f6fc313',
+        'type' => 'library',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'dev' => false,
+    ),
+    'versions' => array(
+        'ernilambar/wp-admin-notice' => array(
+            'pretty_version' => '2.0.1',
+            'version' => '2.0.1.0',
+            'reference' => '1649810056fe4072ab470973c61c33182ae7c4aa',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../ernilambar/wp-admin-notice',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'ernilambar/wp-welcome' => array(
+            'pretty_version' => '2.0.2',
+            'version' => '2.0.2.0',
+            'reference' => '18e12741f799f60875e13fee454ee037694472e7',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../ernilambar/wp-welcome',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'maneshtimilsina/majestic-before-after-image' => array(
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '1ab57ea421643eff1cd776be18685b429f6fc313',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+    ),
+);

@@ -1,0 +1,57 @@
+{
+  "name": "ernilambar/wp-admin-notice",
+  "description": "WordPress Helper for showing admin notice",
+  "license": "MIT",
+  "type": "library",
+  "keywords": [
+    "wordpress",
+    "admin",
+    "notice"
+  ],
+  "authors": [
+    {
+      "name": "Nilambar Sharma",
+      "email": "nilambar@outlook.com",
+      "homepage": "https://www.nilambar.net/"
+    }
+  ],
+  "homepage": "https://github.com/ernilambar/wp-admin-notice",
+  "support": {
+    "issues": "https://github.com/ernilambar/wp-admin-notice/issues/"
+  },
+  "require": {
+    "php": ">=7.2.24"
+  },
+  "require-dev": {
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+    "php-parallel-lint/php-parallel-lint": "^1.4",
+    "phpcompatibility/phpcompatibility-wp": "^2.1",
+    "roave/security-advisories": "dev-latest",
+    "wp-coding-standards/wpcs": "^3.1"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "autoload": {
+    "psr-4": {
+      "Nilambar\\AdminNotice\\": "src"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "ergebnis/composer-normalize": true
+    },
+    "optimize-autoloader": true,
+    "process-timeout": 7200,
+    "sort-packages": true
+  },
+  "scripts": {
+    "format": "@php ./vendor/bin/phpcbf --report-full --report-summary",
+    "lint": [
+      "@lint-php",
+      "@phpcs"
+    ],
+    "lint-php": "@php ./vendor/bin/parallel-lint --colors --exclude .git --exclude vendor .",
+    "phpcs": "@php ./vendor/bin/phpcs --report-full --report-summary"
+  }
+}

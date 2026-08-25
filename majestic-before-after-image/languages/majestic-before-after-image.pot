@@ -1,0 +1,253 @@
+# Copyright (C) 2026 Manesh Timilsina
+# This file is distributed under the GPLv3.
+msgid ""
+msgstr ""
+"Project-Id-Version: Majestic Before After Image 2.0.4\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/majestic-before-after-image\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.11.0\n"
+"X-Domain: majestic-before-after-image\n"
+
+#. Plugin Name of the plugin
+#: majestic-before-after-image.php
+#: inc/admin-page/admin-page.php:36
+#: inc/admin-page/admin-page.php:39
+#: inc/elementor/widget.php:61
+#: inc/mbai.php:77
+#: inc/mbai.php:119
+msgid "Majestic Before After Image"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: majestic-before-after-image.php
+msgid "https://maneshtimilsina.com/plugins/majestic-before-after-image/"
+msgstr ""
+
+#. Description of the plugin
+#: majestic-before-after-image.php
+msgid "Majestic Before After Image is an Elementor addon to show the comparison of two images with a draggable handle."
+msgstr ""
+
+#. Author of the plugin
+#: majestic-before-after-image.php
+msgid "Manesh Timilsina"
+msgstr ""
+
+#. Author URI of the plugin
+#: majestic-before-after-image.php
+msgid "https://maneshtimilsina.com/"
+msgstr ""
+
+#. translators: %s: version.
+#: inc/admin-page/admin-page.php:38
+msgid "Version: %s"
+msgstr ""
+
+#: inc/elementor/elementor.php:62
+msgid "MBAI Elements"
+msgstr ""
+
+#: inc/elementor/widget.php:140
+msgid "General"
+msgstr ""
+
+#: inc/elementor/widget.php:147
+msgid "Before Image"
+msgstr ""
+
+#: inc/elementor/widget.php:158
+msgid "After Image"
+msgstr ""
+
+#: inc/elementor/widget.php:179
+msgid "Enable Overlay"
+msgstr ""
+
+#: inc/elementor/widget.php:181
+#: inc/elementor/widget.php:377
+msgid "Yes"
+msgstr ""
+
+#: inc/elementor/widget.php:182
+#: inc/elementor/widget.php:378
+msgid "No"
+msgstr ""
+
+#: inc/elementor/widget.php:193
+msgid "Overlay Color"
+msgstr ""
+
+#: inc/elementor/widget.php:207
+msgid "Enable Labels"
+msgstr ""
+
+#: inc/elementor/widget.php:211
+msgid "On Hover"
+msgstr ""
+
+#: inc/elementor/widget.php:212
+msgid "Always"
+msgstr ""
+
+#: inc/elementor/widget.php:213
+msgid "Never"
+msgstr ""
+
+#: inc/elementor/widget.php:222
+msgid "Before Text"
+msgstr ""
+
+#: inc/elementor/widget.php:224
+msgid "Before"
+msgstr ""
+
+#: inc/elementor/widget.php:234
+msgid "After Text"
+msgstr ""
+
+#: inc/elementor/widget.php:236
+msgid "After"
+msgstr ""
+
+#: inc/elementor/widget.php:246
+msgid "Orientation"
+msgstr ""
+
+#: inc/elementor/widget.php:250
+msgid "Horizontal"
+msgstr ""
+
+#: inc/elementor/widget.php:254
+msgid "Vertical"
+msgstr ""
+
+#: inc/elementor/widget.php:273
+#: inc/elementor/widget.php:577
+msgid "Handle"
+msgstr ""
+
+#: inc/elementor/widget.php:281
+msgid "Handle Type"
+msgstr ""
+
+#: inc/elementor/widget.php:285
+msgid "Arrows"
+msgstr ""
+
+#: inc/elementor/widget.php:286
+msgid "Text"
+msgstr ""
+
+#: inc/elementor/widget.php:294
+#: inc/elementor/widget.php:520
+msgid "Handle Text"
+msgstr ""
+
+#: inc/elementor/widget.php:296
+msgid "DRAG"
+msgstr ""
+
+#: inc/elementor/widget.php:308
+msgid "Circle Size"
+msgstr ""
+
+#: inc/elementor/widget.php:335
+msgid "Handle Style"
+msgstr ""
+
+#: inc/elementor/widget.php:339
+msgid "Style 1"
+msgstr ""
+
+#: inc/elementor/widget.php:340
+msgid "Style 2"
+msgstr ""
+
+#: inc/elementor/widget.php:341
+msgid "Style 3"
+msgstr ""
+
+#: inc/elementor/widget.php:342
+msgid "Style 4"
+msgstr ""
+
+#: inc/elementor/widget.php:343
+msgid "Style 5"
+msgstr ""
+
+#: inc/elementor/widget.php:344
+msgid "Style 6"
+msgstr ""
+
+#: inc/elementor/widget.php:355
+msgid "Default Offset"
+msgstr ""
+
+#: inc/elementor/widget.php:374
+msgid "Enable On Mouse Hover"
+msgstr ""
+
+#: inc/elementor/widget.php:375
+msgid "If enabled, handle will move on mouse hover instead of dragging."
+msgstr ""
+
+#: inc/elementor/widget.php:394
+msgid "Labels"
+msgstr ""
+
+#: inc/elementor/widget.php:419
+#: inc/elementor/widget.php:545
+msgid "Color"
+msgstr ""
+
+#: inc/elementor/widget.php:434
+#: inc/elementor/widget.php:559
+msgid "Background Color"
+msgstr ""
+
+#: inc/elementor/widget.php:447
+msgid "Border Color"
+msgstr ""
+
+#: inc/elementor/widget.php:461
+msgid "Border Width"
+msgstr ""
+
+#: inc/elementor/widget.php:475
+msgid "Border Radius"
+msgstr ""
+
+#: inc/elementor/widget.php:496
+msgid "Padding"
+msgstr ""
+
+#: inc/elementor/widget.php:587
+msgid "Handle Color"
+msgstr ""
+
+#: inc/elementor/widget.php:655
+msgid "Default Before Image"
+msgstr ""
+
+#: inc/elementor/widget.php:662
+msgid "Default After Image"
+msgstr ""
+
+#. translators: 1: Plugin name 2: Elementor
+#: inc/mbai.php:76
+msgid "\"%1$s\" requires \"%2$s\" to be installed and activated."
+msgstr ""
+
+#: inc/mbai.php:78
+msgid "Elementor"
+msgstr ""
+
+#: inc/mbai.php:102
+msgid "Welcome"
+msgstr ""

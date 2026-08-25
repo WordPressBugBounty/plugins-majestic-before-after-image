@@ -1,0 +1,756 @@
+/**
+ * Majestic Before After Image - Main Stylesheet
+ *
+ * Replaces third-party twentytwenty.css + old mbai-elementor.css.
+ * Pure CSS, no framework dependencies.
+ *
+ * Backwards compatibility: legacy .twentytwenty-* class names are kept as
+ * aliases so custom CSS targeting v2 class names continues to work after
+ * upgrading to v3. Both class names are output by the JS engine.
+ *
+ * @package MBAI
+ */
+
+/* ==========================================================================
+   Core container & image layout
+   ========================================================================== */
+
+.mbai-before-after-wrap {
+	width: 100%;
+	display: block;
+}
+
+/* Alignment variants */
+.mbai-align-wrap { display: block; width: 100%; }
+.mbai-align-wrap.mbai-align-left   { text-align: left; }
+.mbai-align-wrap.mbai-align-center { text-align: center; }
+.mbai-align-wrap.mbai-align-right  { text-align: right; }
+
+.mbai-wrapper {
+	display: block;
+	line-height: 0;
+	width: 100%;
+	text-align: inherit; /* honour alignment from .mbai-align-wrap */
+}
+
+.mbai-container {
+	box-sizing: content-box;
+	position: relative;
+	display: inline-block; /* shrink-wrap to the before image so labels & divider match its size */
+	overflow: hidden;
+	user-select: none;
+	-webkit-user-select: none;
+	z-index: 0;
+	max-width: 100%;
+	vertical-align: top;
+	text-align: left; /* reset so inner content isn't affected by alignment */
+}
+
+.mbai-container * {
+	box-sizing: content-box;
+}
+
+/* Before image stays in normal flow so the container takes its real size. */
+.mbai-container img.mbai-before {
+	display: block;
+	max-width: 100%;
+	height: auto;
+	position: relative;
+	top: auto;
+	left: auto;
+}
+
+/* After image is overlaid on top, matching the before image's box. */
+.mbai-container img.mbai-after {
+	display: block;
+	max-width: 100%;
+	height: auto;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+/* ==========================================================================
+   Before / After image z-index
+   ========================================================================== */
+
+.mbai-before { z-index: 20; }
+.mbai-after  { z-index: 10; }
+
+/* ==========================================================================
+   Divider lines (::before / ::after pseudo-elements on the handle)
+   ========================================================================== */
+
+.mbai-horizontal .mbai-handle::before,
+.mbai-horizontal .mbai-handle::after,
+.mbai-vertical   .mbai-handle::before,
+.mbai-vertical   .mbai-handle::after {
+	content: " ";
+	display: block;
+	background: white;
+	position: absolute;
+	z-index: 30;
+	box-shadow: 0 0 12px rgba(51, 51, 51, 0.5);
+}
+
+.mbai-horizontal .mbai-handle::before,
+.mbai-horizontal .mbai-handle::after {
+	width: 3px;
+	height: 9999px;
+	left: 50%;
+	margin-left: -1.5px;
+}
+
+.mbai-vertical .mbai-handle::before,
+.mbai-vertical .mbai-handle::after {
+	width: 9999px;
+	height: 3px;
+	top: 50%;
+	margin-top: -1.5px;
+}
+
+/* ==========================================================================
+   Labels & Overlay
+   ========================================================================== */
+
+.mbai-before-label,
+.mbai-after-label,
+.mbai-overlay {
+	position: absolute;
+	top: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.mbai-before-label,
+.mbai-after-label {
+	transition: opacity 0.5s;
+	opacity: 0;
+	z-index: 26; /* above overlay (25) so labels are always clickable/visible */
+	pointer-events: none;
+}
+
+.mbai-before-label::before,
+.mbai-after-label::before {
+	content: attr(data-content);
+	color: white;
+	font-size: 13px;
+	letter-spacing: 0.1em;
+	position: absolute;
+	background: rgba(0, 0, 0, 0.2);
+	line-height: 38px;
+	padding: 0 20px;
+	border-radius: 2px;
+}
+
+/* Horizontal label positions */
+.mbai-horizontal .mbai-before-label::before,
+.mbai-horizontal .mbai-after-label::before {
+	top: 50%;
+	margin-top: -19px;
+}
+
+.mbai-horizontal .mbai-before-label::before { left: 10px; }
+.mbai-horizontal .mbai-after-label::before  { right: 10px; }
+
+/* Vertical label positions */
+.mbai-vertical .mbai-before-label::before,
+.mbai-vertical .mbai-after-label::before {
+	left: 50%;
+	margin-left: -45px;
+	text-align: center;
+	width: 90px;
+}
+
+.mbai-vertical .mbai-before-label::before { top: 10px; }
+.mbai-vertical .mbai-after-label::before  { bottom: 10px; }
+
+/* Overlay */
+.mbai-overlay {
+	transition: background 0.5s;
+	background: rgba(0, 0, 0, 0);
+	z-index: 25;
+}
+
+/* Labels show on hover — triggered by hovering the container, not the overlay */
+.mbai-container:hover .mbai-before-label,
+.mbai-container:hover .mbai-after-label {
+	opacity: 1;
+}
+
+/* Overlay darkens on hover */
+.mbai-overlay:hover,
+.mbai-container:hover .mbai-overlay.overlay-enabled {
+	background: rgba(0, 0, 0, 0.5);
+}
+
+/* Always-visible labels */
+.mbai-labels-status-always .mbai-before-label,
+.mbai-labels-status-always .mbai-after-label {
+	opacity: 1;
+}
+
+/* Hide labels while actively dragging */
+.mbai-container.active .mbai-before-label,
+.mbai-container.active .mbai-after-label {
+	opacity: 0;
+}
+
+/* Clear overlay background while dragging */
+.mbai-container.active .mbai-overlay {
+	background: rgba(0, 0, 0, 0) !important;
+}
+
+/* Disabled overlay — no background at all */
+.mbai-overlay.overlay-disabled {
+	background: none !important;
+	pointer-events: none;
+}
+
+/* ==========================================================================
+   Handle
+   ========================================================================== */
+
+.mbai-handle {
+	height: 38px;
+	width: 38px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-left: -22px;
+	margin-top: -22px;
+	border: 3px solid white;
+	border-radius: 1000px;
+	box-shadow: 0 0 12px rgba(51, 51, 51, 0.5);
+	z-index: 40;
+	cursor: pointer;
+	transform: translateZ(0); /* GPU layer */
+}
+
+/* Divider offsets from handle centre */
+.mbai-horizontal .mbai-handle::before {
+	bottom: 50%;
+	margin-bottom: 22px;
+	box-shadow: 0 3px 0 white, 0 0 12px rgba(51, 51, 51, 0.5);
+}
+.mbai-horizontal .mbai-handle::after {
+	top: 50%;
+	margin-top: 22px;
+	box-shadow: 0 -3px 0 white, 0 0 12px rgba(51, 51, 51, 0.5);
+}
+
+.mbai-vertical .mbai-handle::before {
+	left: 50%;
+	margin-left: 22px;
+	box-shadow: 3px 0 0 white, 0 0 12px rgba(51, 51, 51, 0.5);
+}
+.mbai-vertical .mbai-handle::after {
+	right: 50%;
+	margin-right: 22px;
+	box-shadow: -3px 0 0 white, 0 0 12px rgba(51, 51, 51, 0.5);
+}
+
+/* ==========================================================================
+   Arrow indicators
+   ========================================================================== */
+
+.mbai-left-arrow,
+.mbai-right-arrow,
+.mbai-up-arrow,
+.mbai-down-arrow {
+	width: 0;
+	height: 0;
+	border: 6px inset transparent;
+	position: absolute;
+}
+
+/* Horizontal arrows */
+.mbai-left-arrow,
+.mbai-right-arrow {
+	top: 50%;
+	margin-top: -6px;
+}
+
+.mbai-left-arrow {
+	border-right: 6px solid white;
+	left: 50%;
+	margin-left: -17px;
+}
+
+.mbai-right-arrow {
+	border-left: 6px solid white;
+	right: 50%;
+	margin-right: -17px;
+}
+
+/* Vertical arrows */
+.mbai-up-arrow,
+.mbai-down-arrow {
+	left: 50%;
+	margin-left: -6px;
+}
+
+.mbai-up-arrow {
+	border-bottom: 6px solid white;
+	top: 50%;
+	margin-top: -17px;
+}
+
+.mbai-down-arrow {
+	border-top: 6px solid white;
+	bottom: 50%;
+	margin-bottom: -17px;
+}
+
+/* ==========================================================================
+   Handle Styles (arrows)
+   ========================================================================== */
+
+/* Style 1 – default: white border, white arrows, no divider box-shadow */
+.mbai-before-after-wrap.handle-type-arrows .mbai-horizontal .mbai-handle::before,
+.mbai-before-after-wrap.handle-type-arrows .mbai-horizontal .mbai-handle::after {
+	box-shadow: none;
+}
+
+/* Style 2 – white fill, dark arrows */
+.mbai-before-after-wrap.handle-type-arrows.handle-style-2 .mbai-horizontal .mbai-handle,
+.mbai-before-after-wrap.handle-type-arrows.handle-style-2 .mbai-vertical   .mbai-handle {
+	background-color: #fff;
+}
+
+.mbai-before-after-wrap.handle-type-arrows.handle-style-2 .mbai-left-arrow  { border-right-color: #000; }
+.mbai-before-after-wrap.handle-type-arrows.handle-style-2 .mbai-right-arrow { border-left-color:  #000; }
+.mbai-before-after-wrap.handle-type-arrows.handle-style-2 .mbai-down-arrow  { border-top-color:   #000; }
+.mbai-before-after-wrap.handle-type-arrows.handle-style-2 .mbai-up-arrow    { border-bottom-color:#000; }
+
+/* Style 3 – square handle */
+.mbai-before-after-wrap.handle-type-arrows.handle-style-3 .mbai-horizontal .mbai-handle,
+.mbai-before-after-wrap.handle-type-arrows.handle-style-3 .mbai-vertical   .mbai-handle {
+	border-radius: 0;
+}
+
+/* Style 4 – square + white fill + dark arrows */
+.mbai-before-after-wrap.handle-type-arrows.handle-style-4 .mbai-horizontal .mbai-handle,
+.mbai-before-after-wrap.handle-type-arrows.handle-style-4 .mbai-vertical   .mbai-handle {
+	border-radius: 0;
+	background-color: #fff;
+}
+
+.mbai-before-after-wrap.handle-type-arrows.handle-style-4 .mbai-left-arrow  { border-right-color: #000; }
+.mbai-before-after-wrap.handle-type-arrows.handle-style-4 .mbai-right-arrow { border-left-color:  #000; }
+.mbai-before-after-wrap.handle-type-arrows.handle-style-4 .mbai-down-arrow  { border-top-color:   #000; }
+.mbai-before-after-wrap.handle-type-arrows.handle-style-4 .mbai-up-arrow    { border-bottom-color:#000; }
+
+/* Style 5 – tall handle */
+.mbai-before-after-wrap.handle-type-arrows.handle-style-5 .mbai-horizontal .mbai-handle          { height: 70px; }
+.mbai-before-after-wrap.handle-type-arrows.handle-style-5 .mbai-horizontal .mbai-handle::before  { margin-bottom: 38px; }
+.mbai-before-after-wrap.handle-type-arrows.handle-style-5 .mbai-horizontal .mbai-handle::after   { margin-top:    38px; }
+.mbai-before-after-wrap.handle-type-arrows.handle-style-5 .mbai-vertical   .mbai-handle          { width: 70px; }
+.mbai-before-after-wrap.handle-type-arrows.handle-style-5 .mbai-vertical   .mbai-handle::before  { margin-left:  35px; }
+.mbai-before-after-wrap.handle-type-arrows.handle-style-5 .mbai-vertical   .mbai-handle::after   { margin-right: 35px; }
+
+/* Style 6 – tall handle + white fill + dark arrows */
+.mbai-before-after-wrap.handle-type-arrows.handle-style-6 .mbai-horizontal .mbai-handle,
+.mbai-before-after-wrap.handle-type-arrows.handle-style-6 .mbai-vertical   .mbai-handle {
+	background-color: #fff;
+}
+
+.mbai-before-after-wrap.handle-type-arrows.handle-style-6 .mbai-left-arrow  { border-right-color: #000; }
+.mbai-before-after-wrap.handle-type-arrows.handle-style-6 .mbai-right-arrow { border-left-color:  #000; }
+.mbai-before-after-wrap.handle-type-arrows.handle-style-6 .mbai-down-arrow  { border-top-color:   #000; }
+.mbai-before-after-wrap.handle-type-arrows.handle-style-6 .mbai-up-arrow    { border-bottom-color:#000; }
+
+.mbai-before-after-wrap.handle-type-arrows.handle-style-6 .mbai-horizontal .mbai-handle          { height: 70px; }
+.mbai-before-after-wrap.handle-type-arrows.handle-style-6 .mbai-horizontal .mbai-handle::before  { margin-bottom: 38px; }
+.mbai-before-after-wrap.handle-type-arrows.handle-style-6 .mbai-horizontal .mbai-handle::after   { margin-top:    38px; }
+.mbai-before-after-wrap.handle-type-arrows.handle-style-6 .mbai-vertical   .mbai-handle          { width: 70px; }
+.mbai-before-after-wrap.handle-type-arrows.handle-style-6 .mbai-vertical   .mbai-handle::before  { margin-left:  35px; }
+.mbai-before-after-wrap.handle-type-arrows.handle-style-6 .mbai-vertical   .mbai-handle::after   { margin-right: 35px; }
+
+/* ==========================================================================
+   Handle Type: Text
+   ========================================================================== */
+
+.mbai-before-after-wrap.handle-type-text .mbai-horizontal .mbai-handle::before,
+.mbai-before-after-wrap.handle-type-text .mbai-horizontal .mbai-handle::after {
+	box-shadow: none;
+}
+
+.mbai-before-after-wrap.handle-type-text .mbai-handle {
+	background-color: #fff;
+	height: 50px;
+	width: 50px;
+	margin-left: -28px;
+	margin-top: -28px;
+}
+
+.mbai-before-after-wrap.handle-type-text .mbai-handle-text {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 50px;
+	border-radius: 100%;
+	text-align: center;
+}
+
+.mbai-before-after-wrap.handle-type-text .mbai-handle::before,
+.mbai-before-after-wrap.handle-type-text .mbai-handle::after {
+	z-index: -1;
+}
+
+.mbai-before-after-wrap.handle-type-text .mbai-horizontal .mbai-handle::before { margin-bottom: 28px; }
+.mbai-before-after-wrap.handle-type-text .mbai-horizontal .mbai-handle::after  { margin-top:    28px; }
+.mbai-before-after-wrap.handle-type-text .mbai-vertical   .mbai-handle::before { margin-left:   28px; }
+.mbai-before-after-wrap.handle-type-text .mbai-vertical   .mbai-handle::after  { margin-right:  28px; }
+
+/* ==========================================================================
+   Slider Colour (line, circle/handle & arrows)
+
+   Default look is white (the base styles above). Adding .mbai-color-black to
+   the wrap recolours the divider line, the handle circle border and the
+   arrows to black. For the text handle the circle background and text colour
+   are flipped so the text always stays readable:
+     - white slider → white circle, black text
+     - black slider → black circle, white text
+   ========================================================================== */
+
+/* ---- Black variant: arrows + line ---- */
+.mbai-before-after-wrap.mbai-color-black .mbai-handle {
+	border-color: #000;
+}
+
+.mbai-before-after-wrap.mbai-color-black .mbai-horizontal .mbai-handle::before,
+.mbai-before-after-wrap.mbai-color-black .mbai-horizontal .mbai-handle::after,
+.mbai-before-after-wrap.mbai-color-black .mbai-vertical   .mbai-handle::before,
+.mbai-before-after-wrap.mbai-color-black .mbai-vertical   .mbai-handle::after {
+	background: #000;
+}
+
+/* Divider line continuation drawn either side of the handle. */
+.mbai-before-after-wrap.mbai-color-black .mbai-horizontal .mbai-handle::before { box-shadow: 0 3px 0 #000, 0 0 12px rgba(51, 51, 51, 0.5); }
+.mbai-before-after-wrap.mbai-color-black .mbai-horizontal .mbai-handle::after  { box-shadow: 0 -3px 0 #000, 0 0 12px rgba(51, 51, 51, 0.5); }
+.mbai-before-after-wrap.mbai-color-black .mbai-vertical   .mbai-handle::before { box-shadow: 3px 0 0 #000, 0 0 12px rgba(51, 51, 51, 0.5); }
+.mbai-before-after-wrap.mbai-color-black .mbai-vertical   .mbai-handle::after  { box-shadow: -3px 0 0 #000, 0 0 12px rgba(51, 51, 51, 0.5); }
+
+/* Keep arrow style 1 lines clean (no shadow) on the horizontal axis. */
+.mbai-before-after-wrap.mbai-color-black.handle-type-arrows .mbai-horizontal .mbai-handle::before,
+.mbai-before-after-wrap.mbai-color-black.handle-type-arrows .mbai-horizontal .mbai-handle::after { box-shadow: none; }
+
+/* Arrow glyphs. */
+.mbai-before-after-wrap.mbai-color-black .mbai-left-arrow  { border-right-color:  #000; }
+.mbai-before-after-wrap.mbai-color-black .mbai-right-arrow { border-left-color:   #000; }
+.mbai-before-after-wrap.mbai-color-black .mbai-up-arrow    { border-bottom-color: #000; }
+.mbai-before-after-wrap.mbai-color-black .mbai-down-arrow  { border-top-color:    #000; }
+
+/* ---- Text handle: flip circle fill + text colour per variant ---- */
+.mbai-before-after-wrap.handle-type-text.mbai-color-white .mbai-handle      { background-color: #fff; }
+.mbai-before-after-wrap.handle-type-text.mbai-color-white .mbai-handle-text { color: #000; }
+.mbai-before-after-wrap.handle-type-text.mbai-color-black .mbai-handle      { background-color: #000; }
+.mbai-before-after-wrap.handle-type-text.mbai-color-black .mbai-handle-text { color: #fff; }
+
+/* ==========================================================================
+   Backwards-compatibility aliases — .twentytwenty-* → .mbai-*
+   Sites upgrading from v2 with custom CSS targeting twentytwenty class names
+   will continue to work without any changes on their end.
+   ========================================================================== */
+
+/* Map legacy wrapper/container names */
+.twentytwenty-wrapper { display: block; line-height: 0; }
+.twentytwenty-container { box-sizing: content-box; position: relative; overflow: hidden; user-select: none; -webkit-user-select: none; z-index: 0; }
+.twentytwenty-container * { box-sizing: content-box; }
+.twentytwenty-container img { max-width: 100%; position: absolute; top: 0; left: 0; display: block; }
+
+/* Image layers */
+.twentytwenty-before { z-index: 20; }
+.twentytwenty-after  { z-index: 10; }
+
+/* Overlay */
+.twentytwenty-overlay { transition: background 0.5s; background: rgba(0,0,0,0); z-index: 25; position: absolute; top: 0; width: 100%; height: 100%; }
+.twentytwenty-overlay:hover { background: rgba(0,0,0,0.5); }
+.twentytwenty-overlay:hover .twentytwenty-before-label,
+.twentytwenty-overlay:hover .twentytwenty-after-label { opacity: 1; }
+.twentytwenty-container.active .twentytwenty-overlay,
+.twentytwenty-container.active .twentytwenty-overlay:hover { background: rgba(0,0,0,0); }
+.twentytwenty-container.active .twentytwenty-overlay .twentytwenty-before-label,
+.twentytwenty-container.active .twentytwenty-overlay .twentytwenty-after-label,
+.twentytwenty-container.active .twentytwenty-overlay:hover .twentytwenty-before-label,
+.twentytwenty-container.active .twentytwenty-overlay:hover .twentytwenty-after-label { opacity: 0; }
+.twentytwenty-overlay.overlay-disabled { background: none !important; }
+
+/* Labels */
+.twentytwenty-before-label,
+.twentytwenty-after-label { position: absolute; top: 0; width: 100%; height: 100%; transition: opacity 0.5s; opacity: 0; z-index: 26; pointer-events: none; }
+.twentytwenty-before-label::before,
+.twentytwenty-after-label::before { content: attr(data-content); color: white; font-size: 13px; letter-spacing: 0.1em; position: absolute; background: rgba(0,0,0,0.2); line-height: 38px; padding: 0 20px; border-radius: 2px; }
+.twentytwenty-horizontal .twentytwenty-before-label::before,
+.twentytwenty-horizontal .twentytwenty-after-label::before { top: 50%; margin-top: -19px; }
+.twentytwenty-horizontal .twentytwenty-before-label::before { left: 10px; }
+.twentytwenty-horizontal .twentytwenty-after-label::before  { right: 10px; }
+.twentytwenty-vertical .twentytwenty-before-label::before,
+.twentytwenty-vertical .twentytwenty-after-label::before { left: 50%; margin-left: -45px; text-align: center; width: 90px; }
+.twentytwenty-vertical .twentytwenty-before-label::before { top: 10px; }
+.twentytwenty-vertical .twentytwenty-after-label::before  { bottom: 10px; }
+.twentytwenty-container:hover .twentytwenty-before-label,
+.twentytwenty-container:hover .twentytwenty-after-label { opacity: 1; }
+.twentytwenty-labels-status-always .twentytwenty-before-label,
+.twentytwenty-labels-status-always .twentytwenty-after-label { opacity: 1; }
+.twentytwenty-container.active .twentytwenty-before-label,
+.twentytwenty-container.active .twentytwenty-after-label { opacity: 0; }
+
+/* Handle */
+.twentytwenty-handle { height: 38px; width: 38px; position: absolute; left: 50%; top: 50%; margin-left: -22px; margin-top: -22px; border: 3px solid white; border-radius: 1000px; box-shadow: 0 0 12px rgba(51,51,51,0.5); z-index: 40; cursor: pointer; transform: translateZ(0); }
+.twentytwenty-horizontal .twentytwenty-handle::before,
+.twentytwenty-horizontal .twentytwenty-handle::after,
+.twentytwenty-vertical   .twentytwenty-handle::before,
+.twentytwenty-vertical   .twentytwenty-handle::after { content: " "; display: block; background: white; position: absolute; z-index: 30; box-shadow: 0 0 12px rgba(51,51,51,0.5); }
+.twentytwenty-horizontal .twentytwenty-handle::before,
+.twentytwenty-horizontal .twentytwenty-handle::after { width: 3px; height: 9999px; left: 50%; margin-left: -1.5px; }
+.twentytwenty-vertical .twentytwenty-handle::before,
+.twentytwenty-vertical .twentytwenty-handle::after { width: 9999px; height: 3px; top: 50%; margin-top: -1.5px; }
+.twentytwenty-horizontal .twentytwenty-handle::before { bottom: 50%; margin-bottom: 22px; box-shadow: 0 3px 0 white, 0 0 12px rgba(51,51,51,0.5); }
+.twentytwenty-horizontal .twentytwenty-handle::after  { top: 50%; margin-top: 22px; box-shadow: 0 -3px 0 white, 0 0 12px rgba(51,51,51,0.5); }
+.twentytwenty-vertical .twentytwenty-handle::before { left: 50%; margin-left: 22px; box-shadow: 3px 0 0 white, 0 0 12px rgba(51,51,51,0.5); }
+.twentytwenty-vertical .twentytwenty-handle::after  { right: 50%; margin-right: 22px; box-shadow: -3px 0 0 white, 0 0 12px rgba(51,51,51,0.5); }
+
+/* Arrows */
+.twentytwenty-left-arrow, .twentytwenty-right-arrow, .twentytwenty-up-arrow, .twentytwenty-down-arrow { width: 0; height: 0; border: 6px inset transparent; position: absolute; }
+.twentytwenty-left-arrow, .twentytwenty-right-arrow { top: 50%; margin-top: -6px; }
+.twentytwenty-up-arrow, .twentytwenty-down-arrow { left: 50%; margin-left: -6px; }
+.twentytwenty-left-arrow  { border-right: 6px solid white; left: 50%; margin-left: -17px; }
+.twentytwenty-right-arrow { border-left:  6px solid white; right: 50%; margin-right: -17px; }
+.twentytwenty-up-arrow    { border-bottom: 6px solid white; top: 50%; margin-top: -17px; }
+.twentytwenty-down-arrow  { border-top:   6px solid white; bottom: 50%; margin-bottom: -17px; }
+
+/* Handle text */
+.twentytwenty-handle-text { display: flex; justify-content: center; align-items: center; height: 50px; border-radius: 100%; text-align: center; }
+
+/* ==========================================================================
+   WooCommerce integration
+   ========================================================================== */
+
+.mbai-woo-wrap {
+	margin-top: 1em;
+}
+
+.mbai-woo-wrap .mbai-before-after-wrap {
+	width: 100%;
+}
+
+/* Gallery mode — sits in WooCommerce's product image column.
+   Reset the float/margins so it fills the column cleanly and the summary
+   column lines up beside it the same way the default gallery would. */
+.mbai-woo-location-gallery {
+	margin-top: 0;
+	margin-bottom: 1.5em;
+	float: none;
+}
+
+.mbai-woo-location-gallery .mbai-before-after-wrap,
+.mbai-woo-location-gallery .mbai-container {
+	max-width: 100%;
+}
+
+/* Let the chosen image size determine the display size (capped to the
+   column width). We intentionally do NOT force width:100% here, otherwise a
+   small size like "thumbnail" would be stretched to full width and blur. */
+.mbai-woo-location-gallery .mbai-container {
+	display: inline-block;
+}
+
+/* Override WooCommerce/theme `.woocommerce-product-gallery img { width:100% }`
+   so our images render at their real (chosen) size instead of being stretched. */
+.mbai-woo-location-gallery .mbai-container img.mbai-before,
+.mbai-woo-location-gallery .mbai-container img.mbai-after {
+	width: auto;
+	max-width: 100%;
+	height: auto;
+}
+
+/* Alongside-gallery mode — injected as a slide inside the product gallery. */
+.mbai-woo-location-alongside_gallery {
+	margin: 0;
+}
+
+.mbai-woo-location-alongside_gallery .mbai-before-after-wrap,
+.mbai-woo-location-alongside_gallery .mbai-container {
+	max-width: 100%;
+}
+
+/* Fill the gallery slide width, matching WooCommerce's own gallery images. */
+.mbai-woo-location-alongside_gallery .mbai-container {
+	display: block;
+	width: 100%;
+}
+
+.mbai-woo-location-alongside_gallery .mbai-container img.mbai-before {
+	width: 100%;
+}
+
+.mbai-woo-location-alongside_gallery .mbai-container img.mbai-after {
+	max-width: none;
+}
+
+/* Hide WooCommerce's zoom/lightbox trigger while our comparison slide is the
+   active gallery slide (toggled from JS). */
+.woocommerce-product-gallery.mbai-hide-zoom .woocommerce-product-gallery__trigger {
+	display: none !important;
+}
+
+/* ---- Decorated gallery thumbnail ----
+   A single overlay div covers the comparison's nav thumbnail and shows the
+   "before" image + "after" image split, with a divider and handle. Covering
+   the whole thumbnail keeps hover behaviour uniform.
+   Purely decorative — the thumbnail is just gallery navigation. */
+.flex-control-thumbs li.mbai-gallery-thumb {
+	position: relative;
+	overflow: hidden;
+}
+
+.mbai-thumb-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 2;
+	pointer-events: none;
+	/* Before image fills the whole overlay. */
+	background-image: var( --mbai-before-thumb );
+	background-size: cover;
+	background-position: center;
+	/* Match WooCommerce's default thumbnail opacity (inactive = .5). */
+	opacity: 0.5;
+}
+
+/* Match WooCommerce: active or hovered thumbnail shows at full opacity. */
+.flex-control-thumbs li img.flex-active ~ .mbai-thumb-overlay,
+.flex-control-thumbs li:hover .mbai-thumb-overlay {
+	opacity: 1;
+}
+
+/* ---- Horizontal split: after image on the right half ---- */
+.mbai-thumb-overlay--split.mbai-thumb-overlay--horizontal::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 50%;
+	right: 0;
+	background-image: var( --mbai-after-thumb );
+	background-size: cover;
+	background-position: right center;
+	border-left: 2px solid #fff;
+	box-shadow: -1px 0 3px rgba(0, 0, 0, 0.5);
+}
+
+/* ---- Vertical split: after image on the bottom half ---- */
+.mbai-thumb-overlay--split.mbai-thumb-overlay--vertical::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 50%;
+	bottom: 0;
+	background-image: var( --mbai-after-thumb );
+	background-size: cover;
+	background-position: center bottom;
+	border-top: 2px solid #fff;
+	box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Handle circle in the centre (both orientations). */
+.mbai-thumb-overlay::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: calc( 50% + 1px );
+	width: 18px;
+	height: 18px;
+	margin: 0;
+	transform: translate( -50%, -50% );
+	border: 2px solid #fff;
+	border-radius: 50%;
+	background: rgba(0, 0, 0, 0.15);
+	box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
+	box-sizing: border-box;
+}
+
+/* Tiny arrow glyphs inside the handle circle. */
+.mbai-thumb-handle-arrows {
+	position: absolute;
+	top: 50%;
+	left: calc( 50% + 1px );
+	transform: translate( -50%, -50% );
+	z-index: 3;
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	pointer-events: none;
+}
+
+.mbai-thumb-handle-arrows span {
+	width: 0;
+	height: 0;
+	border: 2.5px solid transparent;
+}
+
+.mbai-thumb-handle-arrows .mbai-thumb-arrow-left  { border-right-color: #fff; }
+.mbai-thumb-handle-arrows .mbai-thumb-arrow-right { border-left-color:  #fff; }
+
+/* Vertical orientation: stack arrows and point up / down. */
+.mbai-thumb-handle-arrows--vertical { flex-direction: column; }
+.mbai-thumb-handle-arrows .mbai-thumb-arrow-up   { border-bottom-color: #fff; }
+.mbai-thumb-handle-arrows .mbai-thumb-arrow-down { border-top-color:    #fff; }
+
+/* Black variant arrows. */
+.mbai-thumb-overlay--black .mbai-thumb-handle-arrows .mbai-thumb-arrow-left  { border-right-color: #000; }
+.mbai-thumb-overlay--black .mbai-thumb-handle-arrows .mbai-thumb-arrow-right { border-left-color:  #000; }
+.mbai-thumb-overlay--black .mbai-thumb-handle-arrows .mbai-thumb-arrow-up    { border-bottom-color: #000; }
+.mbai-thumb-overlay--black .mbai-thumb-handle-arrows .mbai-thumb-arrow-down  { border-top-color:    #000; }
+
+/* No after image: show a plain centred divider line over the before image. */
+.mbai-thumb-overlay--horizontal:not(.mbai-thumb-overlay--split)::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 50%;
+	width: 2px;
+	margin-left: -1px;
+	background: #fff;
+	box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
+}
+
+.mbai-thumb-overlay--vertical:not(.mbai-thumb-overlay--split)::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 50%;
+	height: 2px;
+	margin-top: -1px;
+	background: #fff;
+	box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
+}
+
+/* ---- Black slider colour variant for the decorated gallery thumbnail ---- */
+.mbai-thumb-overlay--black.mbai-thumb-overlay--split.mbai-thumb-overlay--horizontal::before {
+	border-left-color: #000;
+	box-shadow: -1px 0 3px rgba(255, 255, 255, 0.5);
+}
+
+.mbai-thumb-overlay--black.mbai-thumb-overlay--split.mbai-thumb-overlay--vertical::before {
+	border-top-color: #000;
+	box-shadow: 0 -1px 3px rgba(255, 255, 255, 0.5);
+}
+
+.mbai-thumb-overlay--black::after {
+	border-color: #000;
+	box-shadow: 0 0 3px rgba(255, 255, 255, 0.6);
+}
+
+.mbai-thumb-overlay--black.mbai-thumb-overlay--horizontal:not(.mbai-thumb-overlay--split)::before,
+.mbai-thumb-overlay--black.mbai-thumb-overlay--vertical:not(.mbai-thumb-overlay--split)::before {
+	background: #000;
+	box-shadow: 0 0 3px rgba(255, 255, 255, 0.6);
+}
